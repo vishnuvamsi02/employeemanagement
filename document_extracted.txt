@@ -1,0 +1,908 @@
+﻿SaaS Employee Attendance, Payroll, Leave & Expense Management System
+
+I want to build a multi-role SaaS application for small and medium-sized businesses/office owners to manage and track employees, working hours, attendance, overtime, leaves, salaries, and business/employee expenses in one centralized system.
+
+The application should be simple, professional, scalable, and easy to use. It should provide different dashboards and permissions for Owner, Accountant, and Supervisor users.
+
+1. User Roles & Login System
+
+The application should have three primary roles:
+
+Owner
+
+The Owner should have complete access to the system and should be able to view and manage:
+
+All employees
+Employee attendance
+Working days
+Absent days
+Half days
+Paid leaves
+Unpaid leaves
+Overtime/extra working hours
+Employee salaries
+Salary deductions
+Overtime payments
+Monthly payroll
+Office expenses
+Employee-related expenses
+Accountant activities
+Supervisor activities
+Reports and analytics
+Overall company financial information
+
+The Owner should have the highest level of permissions and should be able to configure salary, leave, overtime, and other company settings.
+
+Accountant
+
+The Accountant should primarily manage the financial side of the business.
+
+The Accountant should be able to:
+
+Add and track office expenses
+Add employee-related expenses
+Record expense categories
+Upload bills/receipts
+Track daily, weekly, and monthly expenses
+View expense history
+Edit or delete expenses according to permissions
+Generate expense reports
+Track total office expenses
+Track expenses by employee
+Track expenses by category
+View approved/rejected expenses if an approval workflow is implemented
+
+The Accountant should not have full access to employee salary or sensitive payroll information unless the Owner specifically grants permission.
+
+Supervisor
+
+The Supervisor should primarily manage employee attendance and working information.
+
+The Supervisor should be able to:
+
+Mark employee attendance
+Record working days
+Record absent days
+Record half days
+Record paid leaves
+Record unpaid leaves
+Record overtime/extra working hours
+Add notes regarding attendance
+View employee attendance history
+View daily attendance
+View monthly attendance
+Correct attendance records if permitted by the Owner
+Track employees who worked extra hours
+
+The Supervisor should not have unrestricted access to financial information such as total company expenses or confidential salary information unless permission is granted.
+
+2. Employee Management
+
+The Owner or authorized users should be able to create employee profiles.
+
+Each employee should have information such as:
+
+Employee ID
+Name
+Phone number
+Email
+Address
+Joining date
+Department
+Designation
+Employee type
+Salary
+Salary frequency
+Employment status
+Paid leave allowance
+Used paid leaves
+Remaining paid leaves
+Overtime eligibility
+Overtime rate
+Bank/payment information if required
+Notes
+
+There should be two main employee categories:
+
+Labour Workers / Blue-Collar Employees
+
+These employees generally do not have paid leave benefits.
+
+If a labour worker is absent, the corresponding daily salary should be deducted.
+
+White-Collar Employees
+
+Examples:
+
+Accountant
+Supervisor
+Office staff
+Managers
+Administrative employees
+
+These employees can have a predefined number of paid leaves.
+
+If a white-collar employee takes a paid leave and still has available paid leave balance, there should be no salary deduction.
+
+Once their paid leave balance is exhausted, additional leave should be treated as unpaid leave and the corresponding salary should be deducted.
+
+The system should allow the Owner to configure these rules rather than hard-code them.
+
+For Leave approving position person the system should ask is the leave is a paid leave or deducted salary leave
+
+
+
+
+3. Salary Calculation
+
+The application should automatically calculate salaries based on attendance, leave, and overtime.
+
+For example:
+
+An employee has a monthly salary of:
+
+₹30,000
+
+If the company's payroll calculation uses 30 days:
+
+Daily salary = ₹30,000 ÷ 30 = ₹1,000
+
+If the employee is absent for one unpaid day:
+
+Salary deduction = ₹1,000
+
+Therefore:
+
+Final salary = ₹30,000 - ₹1,000 = ₹29,000
+
+The system should allow the Owner to configure the salary calculation basis, such as:
+
+30 days
+Calendar days
+Working days
+Custom company policy
+
+Do not assume that every company uses the same payroll calculation method.
+
+4. Attendance Types
+
+The attendance system should support at least the following statuses:
+
+Present
+Absent
+Half Day
+Paid Leave
+Unpaid Leave
+Holiday
+Weekly Off
+Optional/Company-specific statuses
+
+The Owner should be able to configure which attendance statuses affect salary.
+
+5. Half-Day Calculation
+
+The system must support half-day attendance.
+
+For example:
+
+Monthly salary = ₹30,000
+
+Daily salary = ₹1,000
+
+If an employee works only half a day:
+
+Half-day salary = ₹500
+
+The system should automatically calculate the appropriate salary based on the company's configured half-day rules.
+
+Similarly, if a half-day is treated as leave, the system should record the appropriate attendance and deduction.
+
+6. Paid Leave System
+
+White-collar employees may receive a predefined number of paid leaves.
+
+For example:
+
+An employee receives:
+
+12 paid leaves per year
+
+If they use 5 paid leaves:
+
+Remaining paid leaves = 7
+
+If they use another paid leave:
+
+No salary should be deducted as long as paid leave balance is available.
+
+Once all paid leaves are consumed, additional absences should automatically become unpaid leave and salary should be deducted.
+
+The system should maintain:
+
+Total leave allowance
+Used leaves
+Remaining leaves
+Paid leaves
+Unpaid leaves
+Half-day leaves
+Leave history
+Leave requests
+Leave approval/rejection
+Leave balance by employee
+
+The Owner should be able to configure different leave policies for different employee types.
+
+7. Overtime / Extra Hours
+
+Employees may work additional hours beyond their normal working hours to earn extra money.
+
+The application should automatically calculate overtime compensation based on the employee's salary and configured working hours.
+
+For example:
+
+Monthly salary = ₹30,000
+
+Assume:
+
+30 working days for calculation
+8 normal working hours per day
+
+Daily salary:
+
+₹30,000 ÷ 30 = ₹1,000
+
+Hourly salary:
+
+₹1,000 ÷ 8 = ₹125/hour
+
+If the employee works 2 hours of overtime:
+
+Overtime payment = 2 × ₹125 = ₹250
+
+The system should add the overtime payment to the employee's salary.
+
+The Owner should be able to configure:
+
+Standard working hours per day
+Salary calculation basis
+Overtime multiplier
+Overtime eligibility
+Whether overtime requires Supervisor/Owner approval
+
+
+
+Supervisors should be able to record overtime hours.
+
+For better control, the system should optionally support an approval workflow:
+
+Supervisor records overtime → Owner approves → Overtime included in payroll
+
+The Owner should be able to see:
+
+Employee
+Date
+Normal working hours
+Overtime hours
+Overtime rate
+Overtime amount
+Supervisor who recorded it
+Approval status
+Notes
+9. Payroll Calculation
+
+At the end of every salary period, the system should automatically generate a payroll calculation.
+
+The payroll should show:
+
+Base Salary
+
+Overtime Earnings
+
+Approved allowances/bonuses
+
+Other additions
+
+Unpaid Leave Deductions
+
+Absent Day Deductions
+
+Half-Day Deductions
+
+Other authorized deductions
+
+= Final Salary
+
+The Owner should be able to review the calculation before finalizing payroll.
+
+The system should maintain payroll history for every month.
+
+Example:
+
+Component	Amount
+Base Salary	₹30,000
+Overtime	+₹2,000
+Paid Leave	₹0 deduction
+Unpaid Leave	-₹1,000
+Other Deduction	-₹500
+Final Salary	₹30,500
+
+The system should show exactly why a salary was increased or decreased.
+
+10. Expense Management
+
+The application should have a complete expense management module.
+
+Expenses should be categorized, for example:
+
+Office rent
+Electricity
+Internet
+Telephone
+Stationery
+Equipment
+Travel
+Employee expenses
+Food
+Maintenance
+Transportation
+Office supplies
+Other expenses
+
+Each expense should contain:
+
+Expense ID
+Date
+Amount
+Category
+Description
+Paid by
+Employee/vendor
+Payment method
+Receipt/bill attachment
+Notes
+Approval status
+
+The Accountant should be able to enter and manage expenses.
+
+The Owner should be able to see all expenses and financial summaries.
+
+11. Employee Expenses
+
+The system should separately track expenses related to individual employees.
+
+For example:
+
+Employee A:
+
+Travel: ₹1,500
+Food: ₹500
+Accommodation: ₹2,000
+Other: ₹300
+
+Total employee expenses:
+
+₹4,300
+
+The Owner should be able to see expenses by employee and by month.
+
+12. Dashboard
+
+Create separate dashboards for each role.
+
+Owner Dashboard
+
+The Owner dashboard should provide a complete overview:
+
+Total employees
+Present employees today
+Absent employees today
+Employees on leave
+Overtime hours this month
+Total overtime cost
+Total salaries
+Estimated payroll
+Total office expenses
+Employee expenses
+Total company expenses
+Pending approvals
+Upcoming leave
+Attendance trends
+Monthly salary trends
+Monthly expense trends
+Overtime trends
+
+The dashboard should use clear cards, charts, graphs, and tables.
+
+Supervisor Dashboard
+
+Show:
+
+Today's employees
+Present
+Absent
+Half-day
+On leave
+Overtime today
+Overtime this month
+Employees requiring attention
+Attendance calendar
+Accountant Dashboard
+
+Show:
+
+Today's expenses
+This month's expenses
+Pending expenses
+Total office expenses
+Employee expenses
+Expense by category
+Monthly expense trends
+Recent transactions
+13. Attendance Calendar
+
+Create a calendar-based attendance system.
+
+The Supervisor should be able to select a date and see all employees.
+
+For each employee, show:
+
+Employee | Status | Working Hours | Overtime Hours | Leave Type | Notes
+
+The Supervisor should be able to quickly mark:
+
+Present
+Absent
+Half Day
+Paid Leave
+Unpaid Leave
+
+The system should prevent accidental duplicate attendance entries.
+
+14. Employee Profile
+
+Each employee should have a detailed profile page containing:
+
+Personal information
+Employment information
+Salary
+Attendance summary
+Leave balance
+Leave history
+Overtime history
+Payroll history
+Expense history
+Documents
+Notes
+
+The Owner should be able to see the employee's complete history.
+
+15. Reports
+
+The application should provide downloadable reports.
+
+Reports should include:
+
+Monthly attendance report
+Employee attendance report
+Salary report
+Payroll report
+Overtime report
+Leave report
+Paid leave balance report
+Unpaid leave report
+Expense report
+Employee expense report
+Monthly company expense report
+Department-wise report
+Employee-wise salary report
+
+Reports should be exportable to:
+
+PDF
+Excel/CSV
+16. Notifications
+
+The system should support notifications for important events.
+
+Examples:
+
+Employee leave request submitted
+Leave approved/rejected
+Overtime submitted
+Overtime approved/rejected
+Expense submitted
+Expense approved/rejected
+Payroll ready
+Paid leave balance running low
+Employee absent
+Attendance not marked
+Payroll finalized
+
+Notifications should be role-based.
+
+
+17. Permissions & Security
+
+Implement proper role-based access control.
+
+The Owner should have complete access.
+
+The Accountant should primarily have access to expenses and permitted financial information.
+
+The Supervisor should primarily have access to attendance, working hours, leave, and overtime.
+
+Sensitive salary and financial information should be protected from unauthorized users.
+
+Include:
+
+Secure authentication
+Password reset
+Session management
+Role-based permissions
+Audit logs
+Data validation
+Secure database design
+
+18. Multi-Tenant SaaS Architecture
+
+This should be designed as a multi-tenant SaaS application.
+
+Each business/company should have its own:
+
+Company account
+Employees
+Users
+Roles
+Attendance
+Payroll
+Expenses
+Leave policies
+Salary settings
+Reports
+
+One company's data must never be visible to another company's users.
+
+The architecture should be scalable so that additional companies can register and use the same SaaS platform.
+
+19. Company Settings
+
+The Owner should be able to configure company-specific rules.
+
+Settings should include:
+
+Company name
+Working days
+Weekly offs
+Standard working hours
+Salary calculation method
+Daily wage calculation
+Hourly wage calculation
+Overtime rate
+Overtime multiplier
+Half-day rules
+Leave policies
+Paid leave allowance
+Holiday calendar
+Payroll cycle
+Currency
+Expense categories
+
+The system should use these settings when automatically calculating payroll.
+
+20. Important Business Logic
+
+The payroll calculation engine should be designed carefully so that the rules are configurable rather than hard-coded.
+
+For every employee, the system should determine:
+
+Base salary
+Number of payable days
+Present days
+Half days
+Paid leaves
+Unpaid leaves
+Absent days
+Overtime hours
+Overtime rate
+Overtime earnings
+Salary deductions
+Other approved additions/deductions
+Final payable salary
+
+The system should provide a detailed salary breakdown so the Owner can understand exactly how the final salary was calculated.
+
+21. Example Calculation
+
+Suppose an employee has:
+
+Monthly Salary: ₹30,000
+
+Assume the company uses:
+
+30 days/month
+
+Daily salary:
+
+₹30,000 ÷ 30 = ₹1,000
+
+During the month:
+
+Present: 24 days
+Paid Leave: 3 days
+Unpaid Leave: 2 days
+Half Day: 1 day
+Overtime: 10 hours
+
+If the standard working day is 8 hours:
+
+Hourly rate:
+
+₹1,000 ÷ 8 = ₹125/hour
+
+Overtime:
+
+10 × ₹125 = ₹1,250
+
+Unpaid leave deduction:
+
+2 × ₹1,000 = ₹2,000
+
+Half-day deduction:
+
+₹1,000 × 50% = ₹500
+
+Final salary:
+
+₹30,000 + ₹1,250 - ₹2,000 - ₹500 = ₹28,750
+
+The application should automatically calculate this and display the calculation clearly.
+
+22. User Experience
+
+The UI should be:
+
+Modern
+Clean
+Professional
+Responsive
+Mobile-friendly
+Easy for non-technical users
+Fast for daily attendance entry
+
+The most common tasks should require minimal clicks.
+
+For example, the Supervisor should be able to open the application in the morning and quickly mark attendance for all employees from a single screen.
+
+The Owner should be able to open the dashboard and immediately understand:
+
+How many employees are working, who is absent, who is on leave, how much overtime is being performed, how much salary is payable, and how much money the company is spending.
+
+23. Recommended Main Navigation
+
+Create navigation based on the user's role.
+
+Owner
+Dashboard
+Employees
+Attendance
+Leaves
+Overtime
+Payroll
+Expenses
+Reports
+Approvals
+Settings
+Users & Permissions
+Supervisor
+Dashboard
+Attendance
+Employees
+Leaves
+Overtime
+Attendance Reports
+Accountant
+Dashboard
+Expenses
+Employee Expenses
+Reports
+Approvals
+Yes. Add an Employee Salary Advance / Advance Settlement module. This should be integrated directly into the payroll calculation so advances are automatically deducted from the employee's final salary.
+
+You can add the following section to the prompt:
+
+Writing
+25. Employee Salary Advances & Advance Settlement
+
+The application should support employee salary advances.
+
+Sometimes an employee may request and receive an advance amount before the monthly salary is processed. The system should record the advance and automatically account for it during payroll settlement.The advance should be deducted from the employee salary at the  end of the month.Advance should be approved by the owner.
+
+Advance Management
+
+The Owner or an authorized user should be able to record an advance given to an employee.
+
+Each advance record should contain:
+
+Advance ID
+Employee
+Advance date
+Advance amount
+Reason
+Payment method
+Amount already recovered
+Remaining advance balance
+Expected settlement date
+Status
+Notes
+Created by
+Approval status
+
+For example:
+
+An employee has a monthly salary of:
+
+₹30,000
+
+The employee requests an advance of:
+
+₹5,000
+
+The company pays the employee ₹5,000 during the month.
+
+The system should record:
+
+Total Advance = ₹5,000
+
+At the end of the month, when payroll is calculated, the ₹5,000 advance should be deducted from the employee's payable salary.
+
+If there are no other deductions:
+
+Monthly Salary = ₹30,000
+
+Advance Deduction = ₹5,000
+
+Final Salary = ₹25,000
+
+Partial Advance Recovery
+
+The system should also support cases where the entire advance is not deducted at once.
+
+For example:
+
+Employee receives an advance of:
+
+₹10,000
+
+The Owner decides to recover:
+
+₹2,000 per month
+
+The system should track:
+
+Month	Advance Deduction	Remaining Advance
+Initial	₹0	₹10,000
+Month 1	₹2,000	₹8,000
+Month 2	₹2,000	₹6,000
+Month 3	₹2,000	₹4,000
+Month 4	₹2,000	₹2,000
+Month 5	₹2,000	₹0
+
+Once the remaining advance reaches ₹0, the advance should automatically be marked as Settled.
+
+The system should allow the Owner to choose between:
+
+Full deduction in the next payroll
+Fixed monthly installment
+Custom deduction amount
+Manual settlement
+Multiple Advances
+
+An employee may receive multiple advances.
+
+For example:
+
+January advance: ₹5,000
+February advance: ₹3,000
+March advance: ₹2,000
+
+The system should maintain each advance separately while also showing the employee's total outstanding advance balance.
+
+The Owner should be able to see:
+
+Total Advances Given
+
+Total Amount Recovered
+
+Outstanding Advance Balance
+
+Payroll Integration
+
+Salary advances must be integrated into the payroll calculation.
+
+The final payroll calculation should follow:
+
+Base Salary
+
+Overtime Earnings
+
+Approved Bonuses/Allowances
+
+Absent Day Deductions
+
+Unpaid Leave Deductions
+
+Half-Day Deductions
+
+Salary Advance Recovery
+
+Other Authorized Deductions
+
+= Final Salary Payable
+
+For example:
+
+Payroll Component	Amount
+Base Salary	₹30,000
+Overtime	+₹2,000
+Unpaid Leave	-₹1,000
+Half-Day Deduction	-₹500
+Advance Recovery	-₹5,000
+Final Salary	₹25,500
+
+The system should clearly display each deduction so the employee and Owner can understand how the final salary was calculated.
+
+Advance Approval Workflow
+
+Optionally implement an approval process:
+
+Employee/Supervisor requests advance → Owner approves → Accountant records/payment → Advance appears in employee account → Payroll automatically recovers the advance
+
+The Owner should be able to configure who is allowed to:
+
+Request an advance
+Approve an advance
+Record an advance
+Modify an advance
+Cancel an advance
+Mark an advance as settled
+Advance History
+
+Each employee profile should contain an Advance History section showing:
+
+Date
+Advance amount
+Reason
+Amount recovered
+Remaining balance
+Recovery schedule
+Payroll month
+Status
+
+The Owner should be able to view the employee's complete advance history.
+
+Advance Dashboard
+
+The Owner/Accountant should have a summary showing:
+
+Total advances given
+Total advances recovered
+Total outstanding advances
+Advances given this month
+Advances recovered this month
+Employees with outstanding advances
+Upcoming advance recoveries
+Important Business Rule
+
+The system must never deduct more than the outstanding advance balance.
+
+For example:
+
+If an employee has only ₹1,500 remaining on an advance, the system should not deduct ₹2,000. It should deduct only the applicable ₹1,500 and mark the advance as fully settled.
+
+The system should also prevent duplicate deductions for the same payroll period.
+
+All advance creation, modification, approval, recovery, and settlement actions should be recorded in the audit log.
+
+This makes the payroll engine much more complete because the employee's final settlement can now account for attendance + leave + overtime + expenses/allowances + salary advances + other deductions.
+
+

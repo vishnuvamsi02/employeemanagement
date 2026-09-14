@@ -1,0 +1,305 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  owner
+  supervisor
+  accountant
+}
+
+enum EmployeeType {
+  white_collar
+  blue_collar
+}
+
+enum AttendanceStatus {
+  present
+  absent
+  half_day
+  paid_leave
+  unpaid_leave
+  holiday
+  weekly_off
+}
+
+enum LeaveApprovalType {
+  paid_leave
+  deducted_salary_leave
+}
+
+model Company {
+  id                         String   @id @default(uuid())
+  name                       String
+  code                       String   @unique
+  currency                   String   @default("INR")
+  currencySymbol             String   @default("₹")
+  workingDaysPerWeek         Int      @default(6)
+  weeklyOffDays              Int[]    @default([0])
+  standardWorkingHours       Float    @default(8.0)
+  salaryCalculationBasis     String   @default("30_days")
+  overtimeMultiplier         Float    @default(1.0)
+  halfDayDeductionPercent    Float    @default(50.0)
+  whiteCollarDefaultQuota    Int      @default(12)
+  blueCollarDefaultQuota     Int      @default(0)
+  payrollCycleDay            Int      @default(1)
+
+  users                      User[]
+  employees                  Employee[]
+  attendances                Attendance[]
+  leaveRequests              LeaveRequest[]
+  overtimeRecords            OvertimeRecord[]
+  salaryAdvances             SalaryAdvance[]
+  expenses                   Expense[]
+  payrollRuns                MonthlyPayrollRun[]
+  auditLogs                  AuditLog[]
+  activityLogs               ActivityLog[]
+
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+}
+
+model User {
+  id           String   @id @default(uuid())
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name         String
+  email        String
+  passwordHash String
+  role         UserRole
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  @@unique([companyId, email])
+}
+
+model Employee {
+  id                  String         @id @default(uuid())
+  companyId           String
+  company             Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employeeCode        String
+  name                String
+  phone               String?
+  email               String?
+  address             String?
+  joiningDate         DateTime
+  department          String
+  designation         String
+  employeeType        EmployeeType   @default(white_collar)
+  salary              Float
+  paidLeaveAllowance  Int            @default(12)
+  usedPaidLeaves      Int            @default(0)
+  overtimeEligible    Boolean        @default(true)
+  overtimeMultiplier  Float          @default(1.0)
+  bankAccountName     String?
+  bankAccountNumber    String?
+  bankName            String?
+  bankIfsc            String?
+  notes               String?
+  avatarUrl           String?
+
+  attendances         Attendance[]
+  leaveRequests       LeaveRequest[]
+  overtimeRecords     OvertimeRecord[]
+  salaryAdvances      SalaryAdvance[]
+  expenses            Expense[]
+  payrollItems        PayrollItem[]
+
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  @@unique([companyId, employeeCode])
+}
+
+model Attendance {
+  id            String           @id @default(uuid())
+  companyId     String
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employeeId    String
+  employee      Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date          DateTime         @db.Date
+  status        AttendanceStatus
+  workingHours  Float            @default(8.0)
+  overtimeHours Float            @default(0.0)
+  notes         String?
+  markedBy      String?
+  createdAt     DateTime         @default(now())
+
+  @@unique([employeeId, date])
+}
+
+model LeaveRequest {
+  id           String             @id @default(uuid())
+  companyId    String
+  company      Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employeeId   String
+  employee     Employee           @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  startDate    DateTime           @db.Date
+  endDate      DateTime           @db.Date
+  daysCount    Float
+  reason       String
+  status       String             @default("pending")
+  approvalType LeaveApprovalType?
+  approvedBy   String?
+  approvedAt   DateTime?
+  notes        String?
+  createdAt    DateTime           @default(now())
+}
+
+model OvertimeRecord {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date        DateTime @db.Date
+  hours       Float
+  hourlyRate  Float
+  totalAmount Float
+  status      String   @default("pending")
+  recordedBy  String
+  approvedBy  String?
+  notes       String?
+  createdAt   DateTime @default(now())
+}
+
+model SalaryAdvance {
+  id                       String             @id @default(uuid())
+  companyId                String
+  company                  Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  advanceCode              String
+  employeeId               String
+  employee                 Employee           @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  advanceDate              DateTime           @db.Date
+  amount                   Float
+  reason                   String
+  paymentMethod            String
+  amountRecovered          Float              @default(0.0)
+  remainingBalance         Float
+  expectedSettlementDate   DateTime?          @db.Date
+  recoveryMode             String
+  monthlyInstallmentAmount Float?
+  status                   String             @default("active")
+  approvedBy               String?
+  notes                    String?
+  recoveries               AdvanceRecovery[]
+  createdAt                DateTime           @default(now())
+}
+
+model AdvanceRecovery {
+  id             String        @id @default(uuid())
+  advanceId      String
+  salaryAdvance  SalaryAdvance @relation(fields: [advanceId], references: [id], onDelete: Cascade)
+  payrollMonth   String
+  recoveryDate   DateTime      @db.Date
+  amountDeducted Float
+  createdAt      DateTime      @default(now())
+}
+
+model Expense {
+  id            String   @id @default(uuid())
+  companyId     String
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  expenseCode   String
+  date          DateTime @db.Date
+  title         String
+  amount        Float
+  category      String
+  description   String?
+  expenseType   String
+  paidBy        String
+  employeeId    String?
+  employee      Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  vendor        String?
+  paymentMethod String
+  receiptUrl    String?
+  status        String   @default("pending")
+  approvedBy    String?
+  notes         String?
+  createdAt     DateTime @default(now())
+}
+
+model MonthlyPayrollRun {
+  id              String        @id @default(uuid())
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  payrollMonth    String
+  status          String        @default("draft")
+  totalBaseSalary Float
+  totalOvertime   Float
+  totalAdditions  Float
+  totalDeductions Float
+  totalNetPayable Float
+  finalizedAt     DateTime?
+  finalizedBy     String?
+  items           PayrollItem[]
+  createdAt       DateTime      @default(now())
+
+  @@unique([companyId, payrollMonth])
+}
+
+model PayrollItem {
+  id                    String            @id @default(uuid())
+  payrollRunId          String
+  payrollRun            MonthlyPayrollRun @relation(fields: [payrollRunId], references: [id], onDelete: Cascade)
+  employeeId            String
+  employee              Employee          @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  baseSalary            Float
+  dailySalary           Float
+  hourlyRate            Float
+  presentDays           Int
+  halfDays              Int
+  paidLeaveDays         Int
+  unpaidLeaveDays       Int
+  absentDays            Int
+  overtimeHours         Float             @default(0.0)
+  overtimeEarnings      Float             @default(0.0)
+  bonuses               Float             @default(0.0)
+  allowances            Float             @default(0.0)
+  absentDeductions      Float             @default(0.0)
+  unpaidLeaveDeductions Float             @default(0.0)
+  halfDayDeductions     Float             @default(0.0)
+  advanceRecovery       Float             @default(0.0)
+  otherDeductions       Float             @default(0.0)
+  finalPayableSalary    Float
+  notes                 String?
+  createdAt             DateTime          @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  timestamp DateTime @default(now())
+  userName  String
+  userRole  String
+  action    String
+  module    String
+  details   String
+}
+
+model ActivityLog {
+  id                String   @id @default(uuid())
+  companyId         String
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId            String?
+  userName          String
+  userRole          String
+  action            String
+  module            String
+  targetEntity      String?
+  targetId          String?
+  details           String
+  modificationsJson String?  @db.Text
+  ipAddress         String?
+  createdAt         DateTime @default(now())
+
+  @@index([companyId, createdAt])
+  @@index([userName])
+  @@index([module])
+}
